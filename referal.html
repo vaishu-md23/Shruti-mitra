@@ -1,0 +1,3033 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Shrutimitra - Referral</title>
+
+
+    <!-- =====================================================
+         CHART.JS
+         Used to display the hearing threshold graph
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <!-- =====================================================
+         TESSERACT.JS
+         Used for ID-card OCR
+    ====================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+
+    <style>
+
+        /* =====================================================
+           Shrutimitra COLOUR PALETTE
+        ====================================================== */
+
+        :root {
+
+            --navy: #1D4380;
+
+            --cream: #FAF3EB;
+
+            --pink: #E488A9;
+
+            --yellow: #F0CC74;
+
+            --sky-blue: #719FDD;
+
+            --mint: #7DC6B8;
+
+            --orange: #C97D29;
+
+            --brown: #91461F;
+
+            --bone-cream: #E6E5C9;
+
+            --black: #000000;
+
+            --white: #FFFFFF;
+
+            --light-blue: #F4FBFD;
+
+            --border: #D4E2E8;
+
+            --text-grey: #64747D;
+
+            --success: #3A8D73;
+
+        }
+
+
+        /* =====================================================
+           RESET
+        ====================================================== */
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+        /* =====================================================
+           BODY
+        ====================================================== */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #FAF3EB 0%,
+                    #CBEAF4 25%,
+                    #9BD8EA 55%,
+                    #719FDD 100%
+                );
+
+            padding: 30px 15px;
+
+            color: var(--black);
+
+        }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ====================================================== */
+
+        .container {
+
+            width: 100%;
+
+            max-width: 1100px;
+
+            margin: auto;
+
+            background:
+                rgba(255,255,255,0.97);
+
+            border-radius: 25px;
+
+            padding:
+                35px 40px 45px;
+
+            box-shadow:
+                0 15px 40px
+                rgba(29,67,128,0.18);
+
+        }
+
+
+        /* =====================================================
+           HEADER
+        ====================================================== */
+
+        .logo {
+
+            text-align: center;
+
+            color: var(--navy);
+
+            font-size: 18px;
+
+            font-weight: 900;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            color: var(--navy);
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .subtitle {
+
+            text-align: center;
+
+            color: var(--text-grey);
+
+            font-size: 15px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        /* =====================================================
+           REFERRAL BANNER
+        ====================================================== */
+
+        .referral-banner {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--pink),
+                    var(--yellow)
+                );
+
+            border-radius: 15px;
+
+            padding: 18px 22px;
+
+            margin-bottom: 25px;
+
+            text-align: center;
+
+            color: var(--navy);
+
+            font-weight: 800;
+
+        }
+
+
+        .referral-banner span {
+
+            display: block;
+
+            margin-top: 6px;
+
+            font-size: 13px;
+
+            font-weight: normal;
+
+        }
+
+
+        /* =====================================================
+           CARD
+        ====================================================== */
+
+        .card {
+
+            background: var(--cream);
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            border-left: 7px solid var(--sky-blue);
+
+        }
+
+
+        .card.result-card {
+
+            border-left-color:
+                var(--pink);
+
+        }
+
+
+        .card.guardian-card {
+
+            border-left-color:
+                var(--mint);
+
+        }
+
+
+        .card.verification-card {
+
+            border-left-color:
+                var(--orange);
+
+        }
+
+
+        .card-title {
+
+            color: var(--navy);
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* =====================================================
+           STUDENT INFORMATION
+        ====================================================== */
+
+        .student-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+        }
+
+
+        .info-box {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            border: 1px solid
+                var(--border);
+
+        }
+
+
+        .info-label {
+
+            color: var(--text-grey);
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .info-value {
+
+            color: var(--navy);
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+            word-break: break-word;
+
+        }
+
+
+        /* =====================================================
+           GRAPH AREA
+        ====================================================== */
+
+        .graph-container {
+
+            background: white;
+
+            border-radius: 15px;
+
+            border: 1px solid
+                var(--border);
+
+            padding: 20px;
+
+            height: 420px;
+
+        }
+
+
+        .graph-wrapper {
+
+            position: relative;
+
+            width: 100%;
+
+            height: 100%;
+
+        }
+
+
+        /* =====================================================
+           TEST RESULT SUMMARY
+        ====================================================== */
+
+        .result-summary {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-top: 20px;
+
+        }
+
+
+        .result-box {
+
+            background: white;
+
+            border-radius: 12px;
+
+            padding: 17px;
+
+            text-align: center;
+
+            border: 1px solid
+                var(--border);
+
+        }
+
+
+        .result-label {
+
+            font-size: 12px;
+
+            color: var(--text-grey);
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+        }
+
+
+        .result-value {
+
+            color: var(--navy);
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+        }
+
+
+        .refer-result {
+
+            display: inline-block;
+
+            background:
+                var(--pink);
+
+            color: var(--navy);
+
+            padding:
+                8px 22px;
+
+            border-radius: 20px;
+
+            font-weight: 900;
+
+        }
+
+
+        .pass-result {
+
+            display: inline-block;
+
+            background:
+                var(--mint);
+
+            color: var(--navy);
+
+            padding:
+                8px 22px;
+
+            border-radius: 20px;
+
+            font-weight: 900;
+
+        }
+
+
+        /* =====================================================
+           FORM GRID
+        ====================================================== */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 18px 20px;
+
+        }
+
+
+        .field {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .full {
+
+            grid-column:
+                1 / -1;
+
+        }
+
+
+        label {
+
+            color: var(--navy);
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        input,
+        select,
+        textarea {
+
+            width: 100%;
+
+            padding:
+                12px 14px;
+
+            border-radius: 10px;
+
+            border:
+                2px solid
+                var(--border);
+
+            background: white;
+
+            font-size: 14px;
+
+            font-family: inherit;
+
+            outline: none;
+
+        }
+
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+
+            border-color:
+                var(--sky-blue);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(113,159,221,0.15);
+
+        }
+
+
+        textarea {
+
+            min-height: 100px;
+
+            resize: vertical;
+
+        }
+
+
+        .auto-field {
+
+            background:
+                #EEF7FC;
+
+            border-color:
+                var(--sky-blue);
+
+        }
+
+
+        .field-note {
+
+            color: var(--text-grey);
+
+            font-size: 11px;
+
+            margin-top: 5px;
+
+        }
+
+
+        /* =====================================================
+           OCR SECTION
+        ====================================================== */
+
+        .ocr-section {
+
+            background:
+                var(--light-blue);
+
+            border:
+                2px dashed
+                var(--mint);
+
+            border-radius: 16px;
+
+            padding: 23px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .ocr-title {
+
+            color: var(--navy);
+
+            font-size: 18px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .ocr-description {
+
+            color: var(--text-grey);
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .upload-row {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .upload-button {
+
+            display: inline-block;
+
+            background:
+                var(--sky-blue);
+
+            color: white;
+
+            padding:
+                11px 20px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+        }
+
+
+        .upload-button:hover {
+
+            background:
+                var(--navy);
+
+        }
+
+
+        #idCardInput {
+
+            display: none;
+
+        }
+
+
+        .file-name {
+
+            color: var(--navy);
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+        }
+
+
+        .id-preview {
+
+            display: none;
+
+            margin-top: 18px;
+
+            max-width: 350px;
+
+            max-height: 220px;
+
+            object-fit: contain;
+
+            border-radius: 12px;
+
+            border:
+                2px solid
+                var(--border);
+
+        }
+
+
+        /* =====================================================
+           OCR PROGRESS
+        ====================================================== */
+
+        .ocr-progress {
+
+            display: none;
+
+            margin-top: 18px;
+
+        }
+
+
+        .progress-bar {
+
+            height: 9px;
+
+            background:
+                #DCE8ED;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+        }
+
+
+        .progress-fill {
+
+            width: 0%;
+
+            height: 100%;
+
+            background:
+                var(--mint);
+
+            transition:
+                width 0.2s;
+
+        }
+
+
+        .ocr-status {
+
+            margin-top: 7px;
+
+            color: var(--text-grey);
+
+            font-size: 12px;
+
+        }
+
+
+        .verification-note {
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 9px;
+
+            background:
+                var(--bone-cream);
+
+            color:
+                var(--brown);
+
+            font-size: 12px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ====================================================== */
+
+        .button-container {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 18px;
+
+            margin-top: 30px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .save-button {
+
+            border:
+                3px solid
+                var(--navy);
+
+            background:
+                var(--yellow);
+
+            color:
+                var(--black);
+
+            padding:
+                14px 55px;
+
+            border-radius: 12px;
+
+            font-size: 17px;
+
+            font-weight: 800;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 0
+                rgba(29,67,128,0.2);
+
+            transition: 0.2s;
+
+        }
+
+
+        .save-button:hover {
+
+            background:
+                var(--pink);
+
+            transform:
+                translateY(-3px);
+
+        }
+
+
+        .back-button {
+
+            border:
+                2px solid
+                var(--navy);
+
+            background:
+                white;
+
+            color:
+                var(--navy);
+
+            padding:
+                14px 35px;
+
+            border-radius: 12px;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+        }
+
+
+        .back-button:hover {
+
+            background:
+                var(--cream);
+
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ====================================================== */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color:
+                var(--text-grey);
+
+            font-size: 12px;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ====================================================== */
+
+        @media(max-width:800px) {
+
+            .student-grid {
+
+                grid-template-columns:
+                    1fr 1fr;
+
+            }
+
+
+            .result-summary {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+        }
+
+
+        @media(max-width:600px) {
+
+            body {
+
+                padding: 12px;
+
+            }
+
+
+            .container {
+
+                padding:
+                    25px 16px 35px;
+
+            }
+
+
+            .student-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+
+            .full {
+
+                grid-column: auto;
+
+            }
+
+
+            .graph-container {
+
+                height: 320px;
+
+            }
+
+
+            h1 {
+
+                font-size: 25px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="logo">
+        
+        Shrutimitra
+
+    </div>
+
+
+    <h1>
+
+        Referral Record
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Hearing screening result and follow-up information
+
+    </p>
+
+
+
+    <!-- =====================================================
+         REFERRAL BANNER
+    ====================================================== -->
+
+    <div class="referral-banner">
+
+        🔔 Student Flagged for Further Evaluation
+
+        <span>
+
+            Review the hearing result and complete the
+            parent/legal guardian information below.
+
+        </span>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         1. STUDENT INFORMATION
+    ====================================================== -->
+
+    <div class="card">
+
+
+        <div class="card-title">
+
+            👧👦 Student Information
+
+        </div>
+
+
+        <div class="student-grid">
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Student Name
+                </div>
+
+                <div
+                    class="info-value"
+                    id="studentNameDisplay">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Age
+                </div>
+
+                <div
+                    class="info-value"
+                    id="studentAgeDisplay">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Class / Section
+                </div>
+
+                <div
+                    class="info-value"
+                    id="classDisplay">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <div class="info-label">
+                    Gender
+                </div>
+
+                <div
+                    class="info-value"
+                    id="genderDisplay">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         2. HEARING TEST RESULT
+    ====================================================== -->
+
+    <div class="card result-card">
+
+
+        <div class="card-title">
+
+            🎧 Hearing Screening Result
+
+        </div>
+
+
+        <!-- GRAPH -->
+
+        <div class="graph-container">
+
+            <div class="graph-wrapper">
+
+                <canvas
+                    id="hearingChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- RESULT SUMMARY -->
+
+        <div class="result-summary">
+
+
+            <div class="result-box">
+
+                <div class="result-label">
+
+                    Right Ear
+
+                </div>
+
+                <div
+                    class="result-value"
+                    id="rightEarSummary">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+            <div class="result-box">
+
+                <div class="result-label">
+
+                    Left Ear
+
+                </div>
+
+                <div
+                    class="result-value"
+                    id="leftEarSummary">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+            <div class="result-box">
+
+                <div class="result-label">
+
+                    Screening Outcome
+
+                </div>
+
+                <div id="screeningResult">
+
+                    --
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- TEST DATE -->
+
+        <div
+            style="
+                text-align:center;
+                margin-top:18px;
+                color:#64747D;
+                font-size:12px;
+            "
+            id="testDate">
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         3. GUARDIAN DETAILS
+    ====================================================== -->
+
+    <div class="card guardian-card">
+
+
+        <div class="card-title">
+
+            👨‍👩‍👧 Parent / Legal Guardian Details
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <!-- GUARDIAN NAME -->
+
+            <div class="field">
+
+                <label>
+
+                    Parent / Legal Guardian Name *
+
+                </label>
+
+                <input
+                    type="text"
+                    id="guardianName"
+                    placeholder="Enter full name"
+                >
+
+            </div>
+
+
+            <!-- RELATIONSHIP -->
+
+            <div class="field">
+
+                <label>
+
+                    Relationship to Child *
+
+                </label>
+
+                <select id="relationship">
+
+                    <option value="">
+
+                        Select relationship
+
+                    </option>
+
+                    <option>
+                        Mother
+                    </option>
+
+                    <option>
+                        Father
+                    </option>
+
+                    <option>
+                        Grandmother
+                    </option>
+
+                    <option>
+                        Grandfather
+                    </option>
+
+                    <option>
+                        Legal Guardian
+                    </option>
+
+                    <option>
+                        Foster Parent
+                    </option>
+
+                    <option>
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="field">
+
+                <label>
+
+                    Parent / Guardian Phone *
+
+                </label>
+
+                <input
+                    type="tel"
+                    id="guardianPhone"
+                    placeholder="Enter phone number"
+                >
+
+            </div>
+
+
+            <!-- ALTERNATE PHONE -->
+
+            <div class="field">
+
+                <label>
+
+                    Alternate Phone
+
+                </label>
+
+                <input
+                    type="tel"
+                    id="alternatePhone"
+                    placeholder="Optional"
+                >
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="field full">
+
+                <label>
+
+                    Residential Address *
+
+                </label>
+
+                <textarea
+                    id="address"
+                    placeholder="Enter complete residential address"
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         4. ID CARD + OCR
+    ====================================================== -->
+
+    <div class="card verification-card">
+
+
+        <div class="card-title">
+
+            🪪 Identity Verification
+
+        </div>
+
+
+        <div class="ocr-section">
+
+
+            <div class="ocr-title">
+
+                Upload Student ID Card
+
+            </div>
+
+
+            <div class="ocr-description">
+
+                Upload a clear photograph of the student's
+                ID card. Shrutimitra will extract available
+                information and place it into the fields
+                below. All extracted information can be
+                manually corrected.
+
+            </div>
+
+
+            <div class="upload-row">
+
+
+                <label
+                    for="idCardInput"
+                    class="upload-button">
+
+                    📷 Upload ID Card
+
+                </label>
+
+
+                <input
+                    type="file"
+                    id="idCardInput"
+                    accept="image/*"
+                >
+
+
+                <span
+                    id="idFileName"
+                    class="file-name">
+
+                </span>
+
+
+            </div>
+
+
+            <!-- PREVIEW -->
+
+            <img
+                id="idPreview"
+                class="id-preview"
+                alt="ID card preview"
+            >
+
+
+            <!-- OCR PROGRESS -->
+
+            <div
+                id="ocrProgress"
+                class="ocr-progress">
+
+
+                <div class="progress-bar">
+
+                    <div
+                        id="progressFill"
+                        class="progress-fill">
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="ocrStatus"
+                    class="ocr-status">
+
+                    Preparing OCR...
+
+                </div>
+
+
+            </div>
+
+
+            <div class="verification-note">
+
+                <strong>Important:</strong>
+                OCR is only an assistance tool.
+                Please verify the extracted information
+                before saving the referral record.
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             EDITABLE EXTRACTED DETAILS
+        ================================================== -->
+
+        <div class="form-grid">
+
+
+            <!-- NAME -->
+
+            <div class="field">
+
+                <label>
+
+                    Student Name
+
+                </label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    class="auto-field"
+                    placeholder="Student name"
+                >
+
+                <span class="field-note">
+
+                    Loaded from class list / ID card
+
+                </span>
+
+            </div>
+
+
+            <!-- AGE -->
+
+            <div class="field">
+
+                <label>
+
+                    Age
+
+                </label>
+
+                <input
+                    type="number"
+                    id="studentAge"
+                    class="auto-field"
+                    placeholder="Age"
+                >
+
+                <span class="field-note">
+
+                    Loaded from class list / ID card
+
+                </span>
+
+            </div>
+
+
+            <!-- GUARDIAN FROM ID -->
+
+            <div class="field">
+
+                <label>
+
+                    Parent / Guardian from ID
+
+                </label>
+
+                <input
+                    type="text"
+                    id="ocrGuardian"
+                    placeholder="Extracted guardian name"
+                >
+
+            </div>
+
+
+            <!-- ID NUMBER -->
+
+            <div class="field">
+
+                <label>
+
+                    ID Card Number
+
+                </label>
+
+                <input
+                    type="text"
+                    id="idNumber"
+                    placeholder="Enter / verify ID number"
+                >
+
+            </div>
+
+
+            <!-- ADDRESS FROM ID -->
+
+            <div class="field full">
+
+                <label>
+
+                    Address from ID
+
+                </label>
+
+                <textarea
+                    id="ocrAddress"
+                    placeholder="Address extracted from ID card"
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         5. FOLLOW-UP INFORMATION
+    ====================================================== -->
+
+    <div class="card">
+
+
+        <div class="card-title">
+
+            🩺 Follow-up Information
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <div class="field">
+
+                <label>
+
+                    Recommended Follow-up
+
+                </label>
+
+                <select id="recommendation">
+
+                    <option value="">
+
+                        Select
+
+                    </option>
+
+                    <option>
+
+                        Audiologist Consultation
+
+                    </option>
+
+                    <option>
+
+                        ENT Consultation
+
+                    </option>
+
+                    <option>
+
+                        Repeat Hearing Screening
+
+                    </option>
+
+                    <option>
+
+                        Further Diagnostic Testing
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+
+                    Referral Priority
+
+                </label>
+
+                <select id="priority">
+
+                    <option value="">
+
+                        Select
+
+                    </option>
+
+                    <option>
+
+                        Routine
+
+                    </option>
+
+                    <option>
+
+                        Follow-up Required
+
+                    </option>
+
+                    <option>
+
+                        Prompt Evaluation
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="field full">
+
+                <label>
+
+                    Additional Notes
+
+                </label>
+
+                <textarea
+                    id="notes"
+                    placeholder="Enter any additional observations or notes"
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         BUTTONS
+    ====================================================== -->
+
+    <div class="button-container">
+
+
+        <button
+            class="back-button"
+            onclick="goBack()">
+
+            ← Back to Result
+
+        </button>
+
+
+        <button
+            class="save-button"
+            onclick="saveReferral()">
+
+            Save Referral ✓
+
+        </button>
+
+
+    </div>
+
+
+    <div class="footer">
+
+        Shrutimitra • School Hearing Assessment
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    /* =========================================================
+       GLOBAL TEST RECORD
+    ========================================================= */
+
+    let testRecord = null;
+
+    let hearingChart = null;
+
+
+
+    /* =========================================================
+       LOAD DATA
+    ========================================================= */
+
+    window.addEventListener(
+        "DOMContentLoaded",
+        initializePage
+    );
+
+
+    function initializePage() {
+
+
+        /*
+        Try to get the actual hearing
+        test record.
+        */
+
+        const stored =
+            localStorage.getItem(
+                "ShrutimitraTestRecord"
+            );
+
+
+        if (stored) {
+
+            try {
+
+                testRecord =
+                    JSON.parse(stored);
+
+            }
+
+            catch(error) {
+
+                console.error(error);
+
+            }
+
+        }
+
+
+        /*
+        If no real record exists,
+        load demo data so the page
+        can be tested.
+        */
+
+        if (!testRecord) {
+
+            testRecord = {
+
+                student: {
+
+                    name:
+                        "Ananya Sharma",
+
+                    age:
+                        10,
+
+                    gender:
+                        "Female",
+
+                    className:
+                        "Class 5",
+
+                    section:
+                        "A"
+
+                },
+
+                hearingTest: {
+
+                    frequencies:
+                        [
+                            250,
+                            500,
+                            1000,
+                            2000,
+                            4000,
+                            8000
+                        ],
+
+                    rightEar:
+                        [
+                            15,
+                            20,
+                            25,
+                            30,
+                            35,
+                            40
+                        ],
+
+                    leftEar:
+                        [
+                            10,
+                            15,
+                            20,
+                            20,
+                            25,
+                            30
+                        ],
+
+                    result:
+                        "REFER",
+
+                    testDate:
+                        new Date().toISOString()
+
+                }
+
+            };
+
+        }
+
+
+        populateStudent();
+
+        populateTestResult();
+
+        createHearingGraph();
+
+    }
+
+
+
+    /* =========================================================
+       POPULATE STUDENT
+    ========================================================= */
+
+    function populateStudent() {
+
+
+        const student =
+            testRecord.student || {};
+
+
+        document.getElementById(
+            "studentNameDisplay"
+        ).innerText =
+            student.name || "--";
+
+
+        document.getElementById(
+            "studentAgeDisplay"
+        ).innerText =
+            student.age || "--";
+
+
+        document.getElementById(
+            "genderDisplay"
+        ).innerText =
+            student.gender || "--";
+
+
+        let classText =
+            student.className || "--";
+
+
+        if (student.section) {
+
+            classText +=
+                " - " +
+                student.section;
+
+        }
+
+
+        document.getElementById(
+            "classDisplay"
+        ).innerText =
+            classText;
+
+
+        /*
+        Put the same data into
+        editable fields.
+        */
+
+        document.getElementById(
+            "studentName"
+        ).value =
+            student.name || "";
+
+
+        document.getElementById(
+            "studentAge"
+        ).value =
+            student.age || "";
+
+    }
+
+
+
+    /* =========================================================
+       POPULATE TEST RESULT
+    ========================================================= */
+
+    function populateTestResult() {
+
+
+        const test =
+            testRecord.hearingTest || {};
+
+
+        const right =
+            test.rightEar || [];
+
+
+        const left =
+            test.leftEar || [];
+
+
+        /*
+        Display simple average
+        threshold.
+
+        This is only a summary.
+        The actual graph uses all
+        frequency values.
+        */
+
+        if (right.length > 0) {
+
+            const avgRight =
+                Math.round(
+                    right.reduce(
+                        (a,b) => a+b,
+                        0
+                    ) / right.length
+                );
+
+            document.getElementById(
+                "rightEarSummary"
+            ).innerText =
+                avgRight +
+                " dB HL avg.";
+
+        }
+
+
+        if (left.length > 0) {
+
+            const avgLeft =
+                Math.round(
+                    left.reduce(
+                        (a,b) => a+b,
+                        0
+                    ) / left.length
+                );
+
+            document.getElementById(
+                "leftEarSummary"
+            ).innerText =
+                avgLeft +
+                " dB HL avg.";
+
+        }
+
+
+        /*
+        Screening outcome
+        */
+
+        const result =
+            String(
+                test.result || "REFER"
+            ).toUpperCase();
+
+
+        const resultBox =
+            document.getElementById(
+                "screeningResult"
+            );
+
+
+        if (result === "PASS") {
+
+            resultBox.innerHTML = `
+
+                <span class="pass-result">
+
+                    PASS
+
+                </span>
+
+            `;
+
+        }
+
+        else {
+
+            resultBox.innerHTML = `
+
+                <span class="refer-result">
+
+                    REFER
+
+                </span>
+
+            `;
+
+        }
+
+
+        /*
+        Date
+        */
+
+        if (test.testDate) {
+
+            const date =
+                new Date(
+                    test.testDate
+                );
+
+
+            document.getElementById(
+                "testDate"
+            ).innerText =
+
+                "Test completed on " +
+                date.toLocaleDateString(
+                    "en-IN",
+                    {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       CREATE HEARING GRAPH
+    ========================================================= */
+
+    function createHearingGraph() {
+
+
+        const test =
+            testRecord.hearingTest || {};
+
+
+        const frequencies =
+            test.frequencies || [];
+
+
+        const rightEar =
+            test.rightEar || [];
+
+
+        const leftEar =
+            test.leftEar || [];
+
+
+        const canvas =
+            document.getElementById(
+                "hearingChart"
+            );
+
+
+        /*
+        Destroy old graph if necessary.
+        */
+
+        if (hearingChart) {
+
+            hearingChart.destroy();
+
+        }
+
+
+        hearingChart =
+            new Chart(
+                canvas,
+                {
+
+                    type: "line",
+
+                    data: {
+
+                        labels:
+                            frequencies,
+
+                        datasets: [
+
+                            {
+
+                                label:
+                                    "Right Ear",
+
+                                data:
+                                    rightEar,
+
+                                borderColor:
+                                    "#1D4380",
+
+                                backgroundColor:
+                                    "#1D4380",
+
+                                borderWidth:
+                                    3,
+
+                                pointRadius:
+                                    6,
+
+                                pointHoverRadius:
+                                    7,
+
+                                tension:
+                                    0
+
+                            },
+
+                            {
+
+                                label:
+                                    "Left Ear",
+
+                                data:
+                                    leftEar,
+
+                                borderColor:
+                                    "#E488A9",
+
+                                backgroundColor:
+                                    "#E488A9",
+
+                                borderWidth:
+                                    3,
+
+                                pointRadius:
+                                    6,
+
+                                pointHoverRadius:
+                                    7,
+
+                                tension:
+                                    0
+
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive:
+                            true,
+
+                        maintainAspectRatio:
+                            false,
+
+                        plugins: {
+
+                            legend: {
+
+                                position:
+                                    "top"
+
+                            },
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label:
+                                        function(
+                                            context
+                                        ) {
+
+                                            return (
+                                                context.dataset.label
+                                                +
+                                                ": "
+                                                +
+                                                context.parsed.y
+                                                +
+                                                " dB HL"
+                                            );
+
+                                        }
+
+                                }
+
+                            }
+
+                        },
+
+                        scales: {
+
+                            x: {
+
+                                title: {
+
+                                    display:
+                                        true,
+
+                                    text:
+                                        "Frequency (Hz)"
+
+                                }
+
+                            },
+
+                            y: {
+
+                                reverse:
+                                    true,
+
+                                min:
+                                    -10,
+
+                                max:
+                                    100,
+
+                                title: {
+
+                                    display:
+                                        true,
+
+                                    text:
+                                        "Hearing Threshold (dB HL)"
+
+                                },
+
+                                ticks: {
+
+                                    stepSize:
+                                        10
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            );
+
+    }
+
+
+
+    /* =========================================================
+       ID CARD UPLOAD
+    ========================================================= */
+
+    document
+        .getElementById("idCardInput")
+        .addEventListener(
+            "change",
+            handleIDCard
+        );
+
+
+    async function handleIDCard(event) {
+
+
+        const file =
+            event.target.files[0];
+
+
+        if (!file) {
+
+            return;
+
+        }
+
+
+        /*
+        File name
+        */
+
+        document.getElementById(
+            "idFileName"
+        ).innerText =
+            "📄 " +
+            file.name;
+
+
+        /*
+        Preview
+        */
+
+        const preview =
+            document.getElementById(
+                "idPreview"
+            );
+
+
+        preview.src =
+            URL.createObjectURL(
+                file
+            );
+
+
+        preview.style.display =
+            "block";
+
+
+        /*
+        Start OCR
+        */
+
+        await performOCR(file);
+
+    }
+
+
+
+    /* =========================================================
+       OCR
+    ========================================================= */
+
+    async function performOCR(file) {
+
+
+        const progressBox =
+            document.getElementById(
+                "ocrProgress"
+            );
+
+
+        const progressFill =
+            document.getElementById(
+                "progressFill"
+            );
+
+
+        const status =
+            document.getElementById(
+                "ocrStatus"
+            );
+
+
+        progressBox.style.display =
+            "block";
+
+
+        status.innerText =
+            "Reading ID card...";
+
+
+        try {
+
+
+            const result =
+                await Tesseract.recognize(
+
+                    file,
+
+                    "eng",
+
+                    {
+
+                        logger:
+                            function(message) {
+
+
+                                if (
+                                    message.status
+                                    ===
+                                    "recognizing text"
+                                ) {
+
+
+                                    const percent =
+                                        Math.round(
+                                            (
+                                                message.progress
+                                                ||
+                                                0
+                                            ) * 100
+                                        );
+
+
+                                    progressFill.style.width =
+                                        percent +
+                                        "%";
+
+
+                                    status.innerText =
+                                        "Reading text... "
+                                        +
+                                        percent +
+                                        "%";
+
+                                }
+
+                            }
+
+                    }
+
+                );
+
+
+            const text =
+                result.data.text;
+
+
+            console.log(
+                "OCR TEXT:",
+                text
+            );
+
+
+            progressFill.style.width =
+                "100%";
+
+
+            status.innerText =
+                "✓ ID card processed";
+
+
+            /*
+            Extract available information
+            */
+
+            extractIDInformation(
+                text
+            );
+
+
+        }
+
+        catch(error) {
+
+
+            console.error(error);
+
+
+            status.innerText =
+                "Unable to read the ID card.";
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       OCR FIELD EXTRACTION
+    ========================================================= */
+
+    function extractIDInformation(text) {
+
+
+        const cleanText =
+            text
+                .replace(/\r/g, "\n")
+                .replace(/[ ]+/g, " ");
+
+
+        console.log(
+            "OCR TEXT:",
+            cleanText
+        );
+
+
+        /*
+        =====================================================
+        NAME
+        =====================================================
+        */
+
+        const nameMatch =
+            cleanText.match(
+                /(?:name|student name)\s*[:\-]?\s*([A-Za-z .]+)/i
+            );
+
+
+        if (nameMatch) {
+
+            document.getElementById(
+                "studentName"
+            ).value =
+                nameMatch[1].trim();
+
+        }
+
+
+        /*
+        =====================================================
+        AGE
+        =====================================================
+        */
+
+        const ageMatch =
+            cleanText.match(
+                /\b(?:age|aged)\s*[:\-]?\s*(\d{1,2})\b/i
+            );
+
+
+        if (ageMatch) {
+
+            document.getElementById(
+                "studentAge"
+            ).value =
+                ageMatch[1];
+
+        }
+
+
+        /*
+        =====================================================
+        ADDRESS
+        =====================================================
+        */
+
+        const addressMatch =
+            cleanText.match(
+                /(?:address|addr)\s*[:\-]?\s*([^\n]+)/i
+            );
+
+
+        if (addressMatch) {
+
+            const address =
+                addressMatch[1].trim();
+
+
+            document.getElementById(
+                "ocrAddress"
+            ).value =
+                address;
+
+
+            /*
+            Also populate main address
+            if it is empty.
+            */
+
+            if (
+                !document.getElementById(
+                    "address"
+                ).value
+            ) {
+
+                document.getElementById(
+                    "address"
+                ).value =
+                    address;
+
+            }
+
+        }
+
+
+        /*
+        =====================================================
+        GUARDIAN
+        =====================================================
+        */
+
+        const guardianMatch =
+            cleanText.match(
+                /(?:father|mother|guardian|parent)\s*(?:name)?\s*[:\-]?\s*([A-Za-z .]+)/i
+            );
+
+
+        if (guardianMatch) {
+
+            const guardian =
+                guardianMatch[1].trim();
+
+
+            document.getElementById(
+                "ocrGuardian"
+            ).value =
+                guardian;
+
+
+            /*
+            Populate guardian form
+            if empty.
+            */
+
+            if (
+                !document.getElementById(
+                    "guardianName"
+                ).value
+            ) {
+
+                document.getElementById(
+                    "guardianName"
+                ).value =
+                    guardian;
+
+            }
+
+        }
+
+
+        /*
+        =====================================================
+        PHONE
+        =====================================================
+        */
+
+        const phoneMatch =
+            cleanText.match(
+                /\b[6-9]\d{9}\b/
+            );
+
+
+        if (phoneMatch) {
+
+            document.getElementById(
+                "guardianPhone"
+            ).value =
+                phoneMatch[0];
+
+        }
+
+
+        /*
+        =====================================================
+        ID NUMBER
+        =====================================================
+        */
+
+        const idMatch =
+            cleanText.match(
+                /\b[A-Z0-9]{8,20}\b/
+            );
+
+
+        if (idMatch) {
+
+            document.getElementById(
+                "idNumber"
+            ).value =
+                idMatch[0];
+
+        }
+
+
+        /*
+        Notify user
+        */
+
+        alert(
+
+            "Information extracted from the ID card.\n\n" +
+            "Please verify and correct the fields before saving."
+
+        );
+
+    }
+
+
+
+    /* =========================================================
+       SAVE REFERRAL
+    ========================================================= */
+
+    function saveReferral() {
+
+
+        /*
+        Read all values
+        */
+
+        const referralRecord = {
+
+
+            /*
+            STUDENT
+            */
+
+            student: {
+
+                name:
+                    document.getElementById(
+                        "studentName"
+                    ).value.trim(),
+
+                age:
+                    document.getElementById(
+                        "studentAge"
+                    ).value,
+
+                gender:
+                    testRecord.student.gender
+                    || "",
+
+                className:
+                    testRecord.student.className
+                    || "",
+
+                section:
+                    testRecord.student.section
+                    || ""
+
+            },
+
+
+            /*
+            HEARING TEST
+            */
+
+            hearingTest:
+                testRecord.hearingTest,
+
+
+            /*
+            GUARDIAN
+            */
+
+            guardian: {
+
+                name:
+                    document.getElementById(
+                        "guardianName"
+                    ).value.trim(),
+
+                relationship:
+                    document.getElementById(
+                        "relationship"
+                    ).value,
+
+                phone:
+                    document.getElementById(
+                        "guardianPhone"
+                    ).value.trim(),
+
+                alternatePhone:
+                    document.getElementById(
+                        "alternatePhone"
+                    ).value.trim(),
+
+                address:
+                    document.getElementById(
+                        "address"
+                    ).value.trim()
+
+            },
+
+
+            /*
+            ID INFORMATION
+            */
+
+            identification: {
+
+                idNumber:
+                    document.getElementById(
+                        "idNumber"
+                    ).value.trim(),
+
+                ocrGuardian:
+                    document.getElementById(
+                        "ocrGuardian"
+                    ).value.trim(),
+
+                ocrAddress:
+                    document.getElementById(
+                        "ocrAddress"
+                    ).value.trim()
+
+            },
+
+
+            /*
+            FOLLOW-UP
+            */
+
+            followUp: {
+
+                recommendation:
+                    document.getElementById(
+                        "recommendation"
+                    ).value,
+
+                priority:
+                    document.getElementById(
+                        "priority"
+                    ).value,
+
+                notes:
+                    document.getElementById(
+                        "notes"
+                    ).value.trim()
+
+            },
+
+
+            createdAt:
+                new Date().toISOString()
+
+        };
+
+
+        /* =====================================================
+           VALIDATION
+        ====================================================== */
+
+        if (
+            !referralRecord.student.name
+        ) {
+
+            alert(
+                "Student name is required."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !referralRecord.guardian.name
+        ) {
+
+            alert(
+                "Please enter the parent or legal guardian name."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !referralRecord.guardian.relationship
+        ) {
+
+            alert(
+                "Please select the relationship to the child."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !referralRecord.guardian.phone
+        ) {
+
+            alert(
+                "Please enter the parent/guardian phone number."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !referralRecord.guardian.address
+        ) {
+
+            alert(
+                "Please enter the residential address."
+            );
+
+            return;
+
+        }
+
+
+        /*
+        =====================================================
+        SAVE
+        =====================================================
+        */
+
+        localStorage.setItem(
+
+            "ShrutimitraReferralRecord",
+
+            JSON.stringify(
+                referralRecord
+            )
+
+        );
+
+
+        console.log(
+            "Shrutimitra REFERRAL:",
+            referralRecord
+        );
+
+
+        alert(
+
+            "Referral record saved successfully! ✓"
+
+        );
+
+
+        /*
+        Later:
+
+        window.location.href =
+            "referral-summary.html";
+
+        */
+
+    }
+
+
+
+    /* =========================================================
+       BACK
+    ========================================================= */
+
+    function goBack() {
+
+        window.history.back();
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

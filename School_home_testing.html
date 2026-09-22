@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shrutimitra</title>
+
+    <style>
+
+        /* ================================
+           COLOR PALETTE
+        =================================== */
+
+        :root {
+            --navy: #1D4380;
+            --cream: #FAF3EB;
+            --pink: #E488A9;
+            --yellow: #F0CC74;
+            --sky-blue: #719FDD;
+            --mint: #7DC6B8;
+            --orange: #C97D29;
+            --brown: #91461F;
+            --bone-cream: #E6E5C9;
+            --black: #000000;
+        }
+
+
+        /* ================================
+           RESET
+        =================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* ================================
+           BODY
+        =================================== */
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #FAF3EB 0%,
+                    #BCE7F5 25%,
+                    #8DD2EA 55%,
+                    #719FDD 100%
+                );
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            border-top: 3px solid var(--pink);
+
+            overflow: hidden;
+        }
+
+
+        /* ================================
+           MAIN CARD
+        =================================== */
+
+        .main-container {
+
+            width: 90%;
+
+            max-width: 900px;
+
+            min-height: 560px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+            text-align: center;
+
+            padding: 50px 30px;
+        }
+
+
+        /* ================================
+           LOGO
+        =================================== */
+
+        .logo {
+
+            color: var(--navy);
+
+            font-size: 42px;
+
+            font-weight: 900;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 12px;
+        }
+
+
+        /* ================================
+           WELCOME TEXT
+        =================================== */
+
+        .welcome {
+
+            color: var(--black);
+
+            font-size: 30px;
+
+            font-weight: 700;
+
+            line-height: 1.2;
+
+            margin-bottom: 8px;
+        }
+
+
+        .instruction {
+
+            color: var(--navy);
+
+            font-size: 22px;
+
+            font-weight: 600;
+
+            margin-bottom: 45px;
+        }
+
+
+        /* ================================
+           BUTTON CONTAINER
+        =================================== */
+
+        .button-container {
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 60px;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* ================================
+           TESTING BUTTONS
+        =================================== */
+
+        .test-button {
+
+            width: 260px;
+
+            height: 70px;
+
+            border: 3px solid var(--navy);
+
+            border-radius: 12px;
+
+            background: var(--yellow);
+
+            color: var(--black);
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 0 rgba(29, 67, 128, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+
+        .test-button:hover {
+
+            transform: translateY(-4px);
+
+            background: var(--pink);
+
+            box-shadow:
+                0 9px 15px rgba(29, 67, 128, 0.25);
+        }
+
+
+        .test-button:active {
+
+            transform: translateY(2px);
+
+            box-shadow:
+                0 2px 0 rgba(29, 67, 128, 0.25);
+        }
+
+
+        /* ================================
+           ICON
+        =================================== */
+
+        .button-icon {
+
+            margin-right: 8px;
+        }
+
+
+        /* ================================
+           SMALL FOOTER
+        =================================== */
+
+        .footer {
+
+            margin-top: 55px;
+
+            color: var(--navy);
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            opacity: 0.8;
+        }
+
+
+        /* ================================
+           RESPONSIVE DESIGN
+        =================================== */
+
+        @media (max-width: 700px) {
+
+            body {
+                overflow-y: auto;
+            }
+
+            .main-container {
+
+                min-height: 100vh;
+
+                padding: 35px 20px;
+            }
+
+            .logo {
+                font-size: 34px;
+            }
+
+            .welcome {
+                font-size: 25px;
+            }
+
+            .instruction {
+                font-size: 19px;
+                margin-bottom: 35px;
+            }
+
+            .button-container {
+
+                gap: 20px;
+
+                flex-direction: column;
+            }
+
+            .test-button {
+
+                width: 250px;
+
+                height: 65px;
+
+                font-size: 22px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+    <main class="main-container">
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+            Shrutimitra
+        </div>
+
+
+        <!-- WELCOME MESSAGE -->
+
+        <div class="welcome">
+            Welcome to Shrutimitra!
+        </div>
+
+
+        <div class="instruction">
+            Please choose the type of testing.
+        </div>
+
+
+        <!-- TESTING OPTIONS -->
+
+        <div class="button-container">
+
+
+            <!-- SCHOOL TESTING -->
+
+            <button
+                class="test-button"
+                onclick="startSchoolTesting()">
+
+                <span class="button-icon">🏫</span>
+                School Testing
+
+            </button>
+
+
+            <!-- HOME TESTING -->
+
+            <button
+                class="test-button"
+                onclick="startHomeTesting()">
+
+                <span class="button-icon">🏠</span>
+                Home Testing
+
+            </button>
+
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+            🎧 Making hearing assessment simple and engaging
+        </div>
+
+
+    </main>
+
+
+    <script>
+
+        function startSchoolTesting() {
+
+            window.location.href =
+                "school-testing.html";
+
+        }
+
+
+        function startHomeTesting() {
+
+            window.location.href =
+                "home-testing.html";
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

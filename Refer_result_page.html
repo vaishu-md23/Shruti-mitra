@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HearQuest — Referral Details</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    :root{
+        --navy:#1D4380;
+        --cream:#FAF3EB;
+        --pink:#E488A9;
+        --yellow:#F0CC74;
+        --sky:#719FDD;
+        --mint:#7DC6B8;
+        --orange:#C97D29;
+        --brown:#91461F;
+        --bone:#E6E5C9;
+        --card:#ffffff;
+        --refer-bg:#F6DCC9;
+        --refer-text:#8A3A12;
+    }
+    *{box-sizing:border-box;}
+    body{
+        margin:0;
+        background-color: var(--cream);
+        color: var(--navy);
+        font-family:'Inter', sans-serif;
+    }
+    h1, h2, h3, .brand{
+        font-family:'Baloo 2', sans-serif;
+        color: var(--navy);
+        margin:0;
+    }
+    img{ max-width:100%; display:block; }
+
+    /* ---------- minimal header ---------- */
+    .site-header{
+        background-color: var(--cream);
+        padding: 18px 40px;
+        border-bottom: 2px solid rgba(29,67,128,0.15);
+        display:flex;
+        align-items:center;
+        gap:12px;
+    }
+    .site-header .mark{
+    width:34px; height:34px;
+    object-fit:contain;
+}
+    .site-header .mark svg{ width:18px; height:18px; stroke: var(--cream); }
+    .site-header span{ font-size:1.25rem; font-weight:700; }
+
+    /* ---------- page shell ---------- */
+    main{
+        max-width:980px;
+        margin:0 auto;
+        padding: 40px 24px 90px;
+    }
+
+    .result-banner{
+        display:flex;
+        align-items:center;
+        gap:16px;
+        background-color: var(--refer-bg);
+        border:2px solid var(--orange);
+        border-radius:14px;
+        padding:18px 22px;
+        margin-bottom:32px;
+    }
+    .result-banner .dot{
+        width:14px; height:14px;
+        border-radius:50%;
+        background-color: var(--orange);
+        flex:0 0 auto;
+    }
+    .result-banner .label{
+        font-size:.85rem;
+        font-weight:600;
+        color: var(--refer-text);
+        text-transform:none;
+        margin-bottom:2px;
+    }
+    .result-banner .value{
+        font-family:'Baloo 2', sans-serif;
+        font-size:1.4rem;
+        font-weight:700;
+        color: var(--refer-text);
+    }
+    .result-banner p{
+        margin:0 0 0 auto;
+        max-width:34ch;
+        font-size:.92rem;
+        line-height:1.5;
+        color:#6b4223;
+    }
+
+    .layout{
+        display:grid;
+        grid-template-columns: 1fr 1fr;
+        gap:24px;
+        align-items:start;
+    }
+
+    .card{
+        background-color: var(--card);
+        border-radius:16px;
+        padding:26px;
+        box-shadow: 0 2px 10px rgba(29,67,128,0.08);
+    }
+    .card h2{
+        font-size:1.2rem;
+        margin-bottom:6px;
+    }
+    .card .sub{
+        font-size:.88rem;
+        color:#5b5348;
+        margin-bottom:18px;
+        line-height:1.5;
+    }
+
+    label{
+        display:block;
+        font-weight:600;
+        font-size:.9rem;
+        margin-bottom:8px;
+        color: var(--navy);
+    }
+
+    /* ---------- ID upload ---------- */
+    .upload-box{
+        border:2px dashed var(--sky);
+        border-radius:12px;
+        padding:22px;
+        text-align:center;
+        background-color:#F3F8FF;
+        cursor:pointer;
+        transition: border-color .15s ease, background-color .15s ease;
+    }
+    .upload-box:hover, .upload-box.dragover{
+        border-color: var(--navy);
+        background-color:#EAF2FF;
+    }
+    .upload-box svg{ width:30px; height:30px; stroke: var(--navy); margin:0 auto 10px; }
+    .upload-box .hint{ font-size:.85rem; color:#5b5348; margin-top:4px; }
+    .upload-box input[type="file"]{ display:none; }
+
+    .upload-preview{
+        margin-top:14px;
+        display:none;
+        align-items:center;
+        gap:12px;
+        background-color:#F3F8FF;
+        border-radius:10px;
+        padding:10px 12px;
+    }
+    .upload-preview.show{ display:flex; }
+    .upload-preview img{
+        width:52px; height:52px;
+        object-fit:cover;
+        border-radius:8px;
+        flex:0 0 auto;
+    }
+    .upload-preview .name{
+        font-size:.85rem;
+        font-weight:600;
+        overflow-wrap:anywhere;
+    }
+    .upload-preview button{
+        margin-left:auto;
+        background:none;
+        border:none;
+        color: var(--brown);
+        font-size:.8rem;
+        font-weight:600;
+        cursor:pointer;
+        text-decoration:underline;
+        flex:0 0 auto;
+    }
+
+    .capture-row{
+        display:flex;
+        gap:10px;
+        margin-top:14px;
+    }
+    .btn{
+        padding:10px 16px;
+        border-radius:9px;
+        font-weight:700;
+        font-size:.88rem;
+        border:2px solid var(--navy);
+        background-color:transparent;
+        color: var(--navy);
+        cursor:pointer;
+        text-align:center;
+    }
+    .btn:hover{ background-color: rgba(29,67,128,0.08); }
+    .btn-solid{
+        background-color: var(--navy);
+        color: var(--cream);
+    }
+    .btn-solid:hover{ background-color: var(--brown); border-color: var(--brown); }
+    .btn-full{ width:100%; }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+
+    input[type="text"], textarea, select{
+        width:100%;
+        font-family:'Inter', sans-serif;
+        font-size:.92rem;
+        padding:11px 12px;
+        border-radius:9px;
+        border:1.5px solid #d8d2c4;
+        background-color:#fdfcf9;
+        color: var(--navy);
+    }
+    input[type="text"]:focus, textarea:focus, select:focus{
+        outline:2px solid var(--sky);
+        outline-offset:1px;
+        border-color: var(--sky);
+    }
+    textarea{ resize:vertical; min-height:78px; }
+
+    .field{ margin-bottom:20px; }
+    .field:last-child{ margin-bottom:0; }
+
+    .address-fill-row{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:8px;
+        gap:10px;
+    }
+    .address-fill-row label{ margin-bottom:0; }
+    #fillAddressBtn{
+        font-size:.82rem;
+        padding:8px 14px;
+        white-space:nowrap;
+    }
+    .fill-status{
+        font-size:.8rem;
+        color: var(--mint);
+        font-weight:600;
+        margin-top:6px;
+        display:none;
+    }
+    .fill-status.show{ display:block; }
+
+    /* ---------- refer-to-centre ---------- */
+    .centre-options{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+    }
+    .centre-option{
+        position:relative;
+    }
+    .centre-option > .option-head{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        border:1.5px solid #d8d2c4;
+        border-radius:9px;
+        padding:11px 14px;
+        cursor:pointer;
+        background-color:#fdfcf9;
+        transition: border-color .15s ease, background-color .15s ease;
+    }
+    .centre-option > .option-head:hover,
+    .centre-option.active > .option-head{
+        border-color: var(--sky);
+        background-color:#F3F8FF;
+    }
+    .centre-option.selected > .option-head{
+        border-color: var(--navy);
+        background-color:#EAF2FF;
+    }
+    .centre-option .option-head span.name{ font-weight:600; font-size:.92rem; }
+    .centre-option .option-head svg{ width:16px; height:16px; stroke: var(--navy); transition: transform .15s ease; }
+    .centre-option.active .option-head svg{ transform: rotate(180deg); }
+
+    .sub-list{
+        display:none;
+        flex-direction:column;
+        gap:4px;
+        margin-top:6px;
+        padding-left:10px;
+        border-left:2px solid var(--sky);
+    }
+    .centre-option.active .sub-list{ display:flex; }
+    .sub-list button{
+        text-align:left;
+        background:none;
+        border:none;
+        padding:9px 12px;
+        border-radius:7px;
+        font-size:.88rem;
+        font-family:'Inter', sans-serif;
+        color: var(--navy);
+        cursor:pointer;
+    }
+    .sub-list button:hover{ background-color:#F3F8FF; }
+    .sub-list button.picked{ background-color: var(--mint); color: var(--navy); font-weight:600; }
+
+    .other-input{
+        display:none;
+        margin-top:8px;
+    }
+    .centre-option.active .other-input{ display:block; }
+
+    .selected-summary{
+        margin-top:14px;
+        font-size:.85rem;
+        color:#5b5348;
+        min-height:1.2em;
+    }
+    .selected-summary strong{ color: var(--navy); }
+
+    .confirm-row{
+        margin-top:22px;
+    }
+    .confirm-msg{
+        display:none;
+        margin-top:12px;
+        background-color:#E9F5F1;
+        border:1.5px solid var(--mint);
+        color:#1e5c4c;
+        border-radius:9px;
+        padding:12px 14px;
+        font-size:.88rem;
+        font-weight:600;
+    }
+    .confirm-msg.show{ display:block; }
+
+    @media (max-width: 780px){
+        .layout{ grid-template-columns:1fr; }
+        .result-banner{ flex-direction:column; align-items:flex-start; }
+        .result-banner p{ margin-left:0; }
+        .address-fill-row{ flex-direction:column; align-items:flex-start; }
+    }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+    <img src="hearquest_logo.png" alt="HearQuest logo" class="mark">
+    <span class="brand">HearQuest</span>
+</header>
+
+<main>
+    <!-- Result banner: hardcoded to Refer for now — will read the actual game result later -->
+    <div class="result-banner">
+        <span class="dot"></span>
+        <div>
+            <div class="value">Result: Refer</div>
+            <div class="label" style="margin-top:4px;">Fill in the details to refer</div>
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- LEFT: ID card -->
+        <section class="card">
+            <h2>Child's ID</h2>
+            <p class="sub">Upload a photo of the child's ID card so we can read their address automatically.</p>
+
+            <div class="upload-box" id="uploadBox">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+                <div><strong>Tap to upload</strong> or drag an image here</div>
+                <div class="hint">JPG or PNG, clear and well-lit</div>
+                <input type="file" id="idFileInput" accept="image/*">
+            </div>
+
+            <div class="upload-preview" id="uploadPreview">
+                <img id="previewImg" src="" alt="ID preview">
+                <span class="name" id="previewName"></span>
+                <button type="button" id="removeUpload">Remove</button>
+            </div>
+
+            <div class="capture-row">
+                <label class="btn btn-full" style="margin:0;">
+                    Take a photo
+                    <input type="file" id="idCameraInput" accept="image/*" capture="environment" style="display:none;">
+                </label>
+            </div>
+
+        </section>
+
+        <!-- RIGHT: address + referral -->
+        <section class="card">
+            <h2>Referral details</h2>
+            <p class="sub">Confirm the address and choose where the child should be referred.</p>
+
+            <div class="field">
+                <div class="address-fill-row">
+                    <label for="addressBox">Address</label>
+                    <button type="button" class="btn" id="fillAddressBtn">Fill address</button>
+                </div>
+                <textarea id="addressBox" placeholder="Enter the address, or upload an ID and tap Fill address"></textarea>
+                <div class="fill-status" id="fillStatus">Address filled from the uploaded ID.</div>
+            </div>
+
+            <div class="field">
+                <label>Refer to centre</label>
+                <div class="centre-options" id="centreOptions">
+
+                    <div class="centre-option" data-centre="DEIC">
+                        <div class="option-head">
+                            <span class="name">DEIC</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <div class="sub-list">
+                            <button type="button" data-value="DEIC 1">DEIC 1</button>
+                            <button type="button" data-value="DEIC 2">DEIC 2</button>
+                            <button type="button" data-value="DEIC 3">DEIC 3</button>
+                        </div>
+                    </div>
+
+                    <div class="centre-option" data-centre="PHC">
+                        <div class="option-head">
+                            <span class="name">PHC</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <div class="sub-list">
+                            <button type="button" data-value="PHC 1">PHC 1</button>
+                            <button type="button" data-value="PHC 2">PHC 2</button>
+                            <button type="button" data-value="PHC 3">PHC 3</button>
+                        </div>
+                    </div>
+
+                    <div class="centre-option" data-centre="Other">
+                        <div class="option-head">
+                            <span class="name">Other</span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </div>
+                        <div class="other-input">
+                            <input type="text" id="otherCentreInput" placeholder="Name the centre">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="selected-summary" id="selectedSummary"></div>
+            </div>
+
+            <div class="confirm-row">
+                <button type="button" class="btn btn-solid btn-full" id="confirmBtn">Confirm referral</button>
+                <div class="confirm-msg" id="confirmMsg"></div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    /* ---------- ID upload + preview ---------- */
+    const uploadBox = document.getElementById('uploadBox');
+    const idFileInput = document.getElementById('idFileInput');
+    const idCameraInput = document.getElementById('idCameraInput');
+    const uploadPreview = document.getElementById('uploadPreview');
+    const previewImg = document.getElementById('previewImg');
+    const previewName = document.getElementById('previewName');
+    const removeUpload = document.getElementById('removeUpload');
+
+    let uploadedIdFile = null;
+
+    function handleFile(file){
+        if(!file) return;
+        uploadedIdFile = file;
+        const reader = new FileReader();
+        reader.onload = e => {
+            previewImg.src = e.target.result;
+            previewName.textContent = file.name;
+            uploadPreview.classList.add('show');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    uploadBox.addEventListener('click', () => idFileInput.click());
+    idFileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+    idCameraInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+    ['dragover','dragenter'].forEach(evt =>
+        uploadBox.addEventListener(evt, e => { e.preventDefault(); uploadBox.classList.add('dragover'); })
+    );
+    ['dragleave','drop'].forEach(evt =>
+        uploadBox.addEventListener(evt, e => { e.preventDefault(); uploadBox.classList.remove('dragover'); })
+    );
+    uploadBox.addEventListener('drop', e => {
+        const file = e.dataTransfer.files[0];
+        if(file) handleFile(file);
+    });
+
+    removeUpload.addEventListener('click', e => {
+        e.stopPropagation();
+        uploadedIdFile = null;
+        idFileInput.value = '';
+        idCameraInput.value = '';
+        uploadPreview.classList.remove('show');
+    });
+
+    /* ---------- fill address (frontend stub — NLP extraction wired in later) ---------- */
+    const fillAddressBtn = document.getElementById('fillAddressBtn');
+    const addressBox = document.getElementById('addressBox');
+    const fillStatus = document.getElementById('fillStatus');
+
+    fillAddressBtn.addEventListener('click', () => {
+        if(!uploadedIdFile){
+            addressBox.placeholder = 'Upload an ID image first, then tap Fill address';
+            addressBox.focus();
+            return;
+        }
+        fillAddressBtn.disabled = true;
+        fillAddressBtn.textContent = 'Reading...';
+        // TODO: replace with the real NLP extraction call once the backend is ready
+        setTimeout(() => {
+            addressBox.value = '[Address extracted from ID goes here]';
+            fillStatus.classList.add('show');
+            fillAddressBtn.disabled = false;
+            fillAddressBtn.textContent = 'Fill address';
+        }, 700);
+    });
+
+    /* ---------- refer-to-centre selector ---------- */
+    const centreOptions = document.querySelectorAll('.centre-option');
+    const selectedSummary = document.getElementById('selectedSummary');
+    const otherCentreInput = document.getElementById('otherCentreInput');
+    let selectedCentre = null;
+
+    function closeAllExcept(target){
+        centreOptions.forEach(opt => {
+            if(opt !== target) opt.classList.remove('active');
+        });
+    }
+
+    function setSelected(centreGroup, value){
+        selectedCentre = value;
+        centreOptions.forEach(opt => opt.classList.remove('selected'));
+        centreGroup.classList.add('selected');
+        centreGroup.querySelectorAll('.sub-list button').forEach(b => b.classList.toggle('picked', b.dataset.value === value));
+        selectedSummary.innerHTML = 'Referring to: <strong>' + value + '</strong>';
+    }
+
+    centreOptions.forEach(opt => {
+        const head = opt.querySelector('.option-head');
+        const name = opt.dataset.centre;
+
+        head.addEventListener('click', () => {
+            const isActive = opt.classList.contains('active');
+            closeAllExcept(opt);
+            opt.classList.toggle('active', !isActive);
+        });
+
+        opt.querySelectorAll('.sub-list button').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                setSelected(opt, btn.dataset.value);
+            });
+        });
+
+        if(name === 'Other'){
+            otherCentreInput.addEventListener('input', () => {
+                if(otherCentreInput.value.trim()){
+                    setSelected(opt, otherCentreInput.value.trim());
+                } else if(selectedCentre && !['DEIC 1','DEIC 2','DEIC 3','PHC 1','PHC 2','PHC 3'].includes(selectedCentre)){
+                    selectedCentre = null;
+                    opt.classList.remove('selected');
+                    selectedSummary.textContent = '';
+                }
+            });
+        }
+    });
+
+    document.addEventListener('click', e => {
+        if(!e.target.closest('.centre-option')){
+            centreOptions.forEach(opt => opt.classList.remove('active'));
+        }
+    });
+
+    /* ---------- confirm ---------- */
+    const confirmBtn = document.getElementById('confirmBtn');
+    const confirmMsg = document.getElementById('confirmMsg');
+
+    confirmBtn.addEventListener('click', () => {
+        if(!selectedCentre){
+            confirmMsg.textContent = 'Choose a centre to refer to before confirming.';
+            confirmMsg.style.backgroundColor = '#F6DCC9';
+            confirmMsg.style.borderColor = '#C97D29';
+            confirmMsg.style.color = '#8A3A12';
+            confirmMsg.classList.add('show');
+            return;
+        }
+        // TODO: send address, ID details and selectedCentre to the backend
+        confirmMsg.textContent = 'Referral confirmed — routed to ' + selectedCentre + '.';
+        confirmMsg.style.backgroundColor = '#E9F5F1';
+        confirmMsg.style.borderColor = '#7DC6B8';
+        confirmMsg.style.color = '#1e5c4c';
+        confirmMsg.classList.add('show');
+    });
+</script>
+
+</body>
+</html>
